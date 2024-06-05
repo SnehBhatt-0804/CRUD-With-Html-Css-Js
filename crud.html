@@ -1,0 +1,87 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD Example</title>
+  <!-- Bootstrap CSS -->
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h2>CRUD Example</h2>
+
+  <!-- Form to add new item -->
+  <form id="addItemForm">
+    <div class="form-group">
+      <label for="itemName">Item Name:</label>
+      <input type="text" class="form-control" id="itemName" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Add Item</button>
+  </form>
+
+  <hr>
+
+  <!-- Display the list of items -->
+  <ul id="itemList" class="list-group">
+    <!-- Items will be dynamically added here -->
+  </ul>
+</div>
+
+<!-- Bootstrap JS, jQuery, and your custom JS -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script>
+  $(document).ready(function () {
+    // Array to store items
+    var items = [];
+
+    // Function to render the item list
+    function renderList() {
+      $("#itemList").empty();
+      items.forEach(function (item, index) {
+        var listItem = $("<li>").addClass("list-group-item").text(item);
+        var editButton = $("<button>").addClass("btn btn-warning btn-sm float-right mx-2 editBtn").text("Edit");
+        var deleteButton = $("<button>").addClass("btn btn-danger btn-sm float-right deleteBtn").text("Delete").data("index", index);
+        listItem.append(editButton, deleteButton);
+        $("#itemList").append(listItem);
+      });
+    }
+
+    // Function to add a new item
+    $("#addItemForm").submit(function (event) {
+      event.preventDefault();
+      var newItem = $("#itemName").val();
+      items.push(newItem);
+      renderList();
+      $("#itemName").val("");
+    });
+
+    // Event delegation for Edit and Delete buttons
+    $("#itemList").on("click", ".editBtn", function () {
+      var index = $(this).closest("li").index();
+      var updatedItem = prompt("Edit item:", items[index]);
+      if (updatedItem !== null) {
+        items[index] = updatedItem;
+        renderList();
+      }
+    });
+
+    $("#itemList").on("click", ".deleteBtn", function () {
+      var index = $(this).data("index");
+      items.splice(index, 1);
+      renderList();
+    });
+  });
+</script>
+
+</body>
+</html>
